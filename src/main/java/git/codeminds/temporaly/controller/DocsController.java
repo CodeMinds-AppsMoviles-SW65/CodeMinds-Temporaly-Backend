@@ -11,7 +11,7 @@ import java.io.IOException;
 
 /**
  * Created by Alex Avila Asto - A.K.A (Ryzeon)
- * Project: temporaly-backend
+ * Project: temporally-backend
  * Date: 23/08/24 @ 23:36
  */
 @Hidden
