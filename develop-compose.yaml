@@ -8,6 +8,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=example
       - MONGO_INITDB_ROOT_USERNAME=root
       - JWT_SECRET=example
+      - GOOGLE_CLIENT_ID=example
+      - GOOGLE_CLIENT_SECRET=example
     restart: always
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/temporally --quiet
