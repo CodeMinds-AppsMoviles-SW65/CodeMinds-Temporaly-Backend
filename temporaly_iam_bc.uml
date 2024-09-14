@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>/media/ryzeon/disco_d/Dev.Ryzeon/@UPC/CICLO 6/movilezZzzZZZ/temporaly-backend/src/main/java/git/codeminds/temporaly</OriginalElement>
+  <nodes>
+    <node x="-1445.699069003286" y="1285.9682365826943">git.codeminds.temporaly.entity.Roles</node>
+    <node x="-1464.3190032858708" y="1515.0">git.codeminds.temporaly.entity.Role</node>
+    <node x="-1174.0" y="1515.0">git.codeminds.temporaly.entity.UserInfo</node>
+    <node x="-1174.0" y="1117.5523001095291">git.codeminds.temporaly.entity.User</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="git.codeminds.temporaly.entity.UserInfo" target="git.codeminds.temporaly.entity.User" relationship="GENERALIZATION">
+      <point x="-127.0" y="0.0" />
+      <point x="-1202.0" y="1646.0" />
+      <point x="-1202.0" y="1283.052" />
+      <point x="-92.0" y="-3.0010952923476E-4" />
+    </edge>
+    <edge source="git.codeminds.temporaly.entity.Role" target="git.codeminds.temporaly.entity.User" relationship="GENERALIZATION">
+      <point x="117.00000328587089" y="0.0" />
+      <point x="-1202.0" y="1600.0" />
+      <point x="-1202.0" y="1283.052" />
+      <point x="-92.0" y="-3.0010952923476E-4" />
+    </edge>
+    <edge source="git.codeminds.temporaly.entity.Roles" target="git.codeminds.temporaly.entity.Role" relationship="GENERALIZATION">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.687435294117647" showDependencies="false" x="-713.0658885542164" y="1665.0308392661557" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>public</VISIBILITY>
+</Diagram>
+
