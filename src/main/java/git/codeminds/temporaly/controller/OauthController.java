@@ -20,7 +20,7 @@ import java.security.Principal;
  * Date: 9/11/24 @ 19:41
  */
 @RestController
-@Hidden
+//@Hidden
 @RequestMapping("/api/v1/authentication/oauth")
 public class OauthController {
 
