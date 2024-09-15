@@ -35,12 +35,10 @@ public class OpenApiConfiguration {
                 .license(new License().name("Apache 2.0")
                         .url("https://springdoc.org")));
 
-        boolean isRunningInProd = activeProfile.equals("prod") || activeProfile.equals("dev");
+        boolean isRunningInProd = activeProfile.equals("prod");
 
         if (isRunningInProd) {
-            openApi.servers(Collections.singletonList(new Server().url("https://temporally.ryzeon.me")));
-        } else {
-            openApi.servers(Collections.singletonList(new Server().url("http://localhost:8080")));
+            openApi.servers(Collections.singletonList(new Server().url("https://temporally-api.ryzeon.me")));
         }
 
         final String securitySchemeName = "bearerAuth";

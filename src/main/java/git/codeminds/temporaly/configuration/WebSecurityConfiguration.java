@@ -1,5 +1,6 @@
 package git.codeminds.temporaly.configuration;
 
+import git.codeminds.temporaly.service.impl.CustomOAuth2UserService;
 import git.codeminds.temporaly.utils.security.pipeline.BearerAuthorizationRequestFilter;
 import git.codeminds.temporaly.utils.security.service.IBearerTokenService;
 import git.codeminds.temporaly.utils.security.service.IHashingService;
@@ -69,9 +70,9 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, CustomOAuth2UserService customOAuth2UserService) throws Exception {
         // CORS default configuration
-        http.cors(configurer -> configurer.configurationSource( e    -> {
+        http.cors(configurer -> configurer.configurationSource(e -> {
             var cors = new CorsConfiguration();
             cors.setAllowedOrigins(List.of("*"));
             cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
@@ -95,9 +96,17 @@ public class WebSecurityConfiguration {
                                 "/api/v1/files/image/**",
                                 "/api/v1/files/video/**",
                                 "/api/v1/files/document/**",
-                                "/webjars/**"
+                                "/webjars/**",
+                                "/api/v1/authentication/oauth2/**",
+                                "/login/oauth2/**"
                         ).permitAll()
-                        .anyRequest().authenticated());
+                        .anyRequest().authenticated())
+                .oauth2Login(oauth2Login -> oauth2Login
+                        .defaultSuccessUrl("/api/v1/authentication/oauth2/success", true)
+                        .failureUrl("/api/v1/authentication/oauth2/failure")
+                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(customOAuth2UserService)
+                        ))
+        ;
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authorizationRequestFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
