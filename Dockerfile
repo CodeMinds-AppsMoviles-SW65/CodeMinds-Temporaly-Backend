@@ -16,7 +16,7 @@ RUN mvn clean install
 
 FROM openjdk:21-jdk-slim
 
-COPY --from=build /app/target/domining-hub-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/temporally-backend-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
 
