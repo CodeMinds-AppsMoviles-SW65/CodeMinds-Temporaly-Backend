@@ -45,19 +45,23 @@ public class UserServiceImpl implements UserService {
             roles.add(roleRepository.findByName(Role.getDefaultRole().getName()).orElseThrow(() -> new RuntimeException("Role not found")));
         }
 
-        var userInfo = new AccountInfo();
-        userInfo.setNames(List.of(request.names().split(" ")));
-        userInfo.setLastNames(List.of(request.lastNames().split(" ")));
+        var accountInfo = new AccountInfo();
+        accountInfo.setNames(List.of(request.names().split(" ")));
+        accountInfo.setLastNames(List.of(request.lastNames().split(" ")));
 
+        Optional<Account> account = accountService.createAccount(accountInfo);
+        if (account.isEmpty()) {
+            throw new RuntimeException("Account not created");
+        }
         var user = new User(
                 request.email(),
                 hashingService.encode(request.password()),
                 Set.copyOf(roles),
-                userInfo
+                account.get()
         );
 
         userRepository.save(user);
-        return userRepository.findByUsername(user.getUsername());
+        return userRepository.findByEmail(user.getEmail());
     }
 
     @Override
@@ -93,7 +97,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Optional<ImmutablePair<User, String>> signIn(String usernameOrEmail, String password) {
-        var user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+        var user = userRepository.findByEmailOrAccountUsername(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (!hashingService.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid password");
@@ -108,7 +112,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<ImmutablePair<User, String>> refreshToken(String refreshToken) {
         var username = tokenService.getUsernameFromToken(refreshToken);
-        var user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+        var user = userRepository.findByAccountUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
         assert user.getAccount() != null;
         // Verify if user has an account
         var token = tokenService.generateToken(user.getAccount().getUsername());
