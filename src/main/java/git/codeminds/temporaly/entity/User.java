@@ -21,8 +21,6 @@ public class User {
     @Id
     private String id;
 
-    private String username;
-
     private String email;
 
     private String password;
@@ -30,21 +28,16 @@ public class User {
     @DBRef
     private Set<Role> roles;
 
-    @Unwrapped(onEmpty = Unwrapped.OnEmpty.USE_NULL, prefix = "info_")
-    private UserInfo info;
+    @DBRef
+    private Account account;
 
     public User() {
     }
 
-    public User(String email, String password, Set<Role> roles, UserInfo info) {
+    public User(String email, String password, Set<Role> roles, Account account) {
         this.email = email;
         this.password = password;
         this.roles = roles;
-        this.info = info;
-        this.username = UserUtils.generateRandomUserName(info.getNames(), info.getLastNames());
-    }
-
-    public String getFullName() {
-        return String.join(" ", this.info.getNames()) + " " + String.join(" ", this.info.getLastNames());
+        this.account = account;
     }
 }
