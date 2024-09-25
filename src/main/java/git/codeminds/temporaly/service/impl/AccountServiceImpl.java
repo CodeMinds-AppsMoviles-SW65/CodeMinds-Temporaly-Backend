@@ -1,5 +1,6 @@
 package git.codeminds.temporaly.service.impl;
 
+import git.codeminds.temporaly.dto.account.UpdateAccountRequest;
 import git.codeminds.temporaly.entity.Account;
 import git.codeminds.temporaly.entity.AccountInfo;
 import git.codeminds.temporaly.repository.AccountRepository;
@@ -33,7 +34,20 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public void updateAccount(String id, UpdateAccountRequest request) {
+        accountRepository.findById(id).ifPresent(account -> {
+            account.setUsername(request.username());
+            accountRepository.save(account);
+        });
+    }
+
+    @Override
     public Optional<Account> findByUsername(String username) {
         return accountRepository.findByUsername(username);
+    }
+
+    @Override
+    public Optional<Account> findById(String id) {
+        return Optional.empty();
     }
 }

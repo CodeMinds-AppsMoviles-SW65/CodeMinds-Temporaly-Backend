@@ -2,6 +2,7 @@ package git.codeminds.temporaly.entity;
 
 import git.codeminds.temporaly.utils.UserUtils;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,6 +24,7 @@ public class Account {
 
     private boolean active;
 
+    @Setter
     private String username;
 
     @Unwrapped(onEmpty = Unwrapped.OnEmpty.USE_NULL, prefix = "info_")

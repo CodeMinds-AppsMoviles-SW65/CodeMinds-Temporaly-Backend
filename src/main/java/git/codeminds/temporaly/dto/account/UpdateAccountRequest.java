@@ -5,5 +5,7 @@ package git.codeminds.temporaly.dto.account;
  * Project: temporally-backend
  * Date: 9/25/24 @ 18:43
  */
-public record UpdateAccountRequest () {
+public record UpdateAccountRequest (
+        String username
+) {
 }
