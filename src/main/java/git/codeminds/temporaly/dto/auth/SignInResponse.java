@@ -19,7 +19,7 @@ public record SignInResponse(
             ImmutablePair<User, String> details) {
         return new SignInResponse(
                 details.getLeft().getId(),
-                details.getLeft().getUsername(),
+                details.getLeft().getAccount().getUsername(),
                 details.getLeft().getEmail(),
                 details.getRight()
         );

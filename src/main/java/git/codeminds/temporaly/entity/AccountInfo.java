@@ -10,7 +10,7 @@ import java.util.List;
  * Date: 23/08/24 @ 23:47
  */
 @Data
-public class UserInfo {
+public class AccountInfo {
 
     private List<String> names;
 
