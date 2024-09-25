@@ -1,6 +1,7 @@
 package git.codeminds.temporaly.controller;
 
 import git.codeminds.temporaly.dto.account.AccountResponse;
+import git.codeminds.temporaly.dto.account.UpdateAccountRequest;
 import git.codeminds.temporaly.entity.Account;
 import git.codeminds.temporaly.service.AccountService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -44,5 +45,22 @@ public class AccountController {
     public ResponseEntity<AccountResponse> findAccount(@PathVariable String username) {
         Optional<Account> account = accountService.findByUsername(username);
         return account.map(value -> ResponseEntity.ok(AccountResponse.fromAccount(value))).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/update/{username}")
+    public ResponseEntity<AccountResponse> updateAccount(@PathVariable String username, @RequestBody UpdateAccountRequest request) {
+        Optional<Account> account = accountService.findByUsername(username);
+        if (account.isPresent()) {
+            Account dbAccount = account.get();
+            accountService.updateAccount(dbAccount.getId(), request);
+            return ResponseEntity.ok(AccountResponse.fromAccount(accountService.findById(dbAccount.getId()).get()));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/activate/{username}/{code}")
+    public ResponseEntity<String> activateAccount(@PathVariable String username, @PathVariable String code) {
+        // code logic
+        return ResponseEntity.ok("Account activated successfully");
     }
 }

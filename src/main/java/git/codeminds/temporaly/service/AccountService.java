@@ -1,5 +1,6 @@
 package git.codeminds.temporaly.service;
 
+import git.codeminds.temporaly.dto.account.UpdateAccountRequest;
 import git.codeminds.temporaly.entity.Account;
 import git.codeminds.temporaly.entity.AccountInfo;
 
@@ -16,5 +17,9 @@ public interface AccountService {
 
     void deleteAccount(String id);
 
+    void updateAccount(String id, UpdateAccountRequest request);
+
     Optional<Account> findByUsername(String username);
+
+    Optional<Account> findById(String id);
 }
