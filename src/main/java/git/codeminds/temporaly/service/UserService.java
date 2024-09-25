@@ -17,6 +17,8 @@ public interface UserService {
 
     Optional<User> findById(String id);
 
+    void deleteById(String id);
+
     Optional<ImmutablePair<User, String>> signIn(String usernameOrEmail, String password);
 
     Optional<ImmutablePair<User, String>> refreshToken(String refreshToken);
