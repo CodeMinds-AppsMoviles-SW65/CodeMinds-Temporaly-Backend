@@ -19,7 +19,7 @@ public record SignUpResponse(
     public static SignUpResponse fromUser(User user) {
         return new SignUpResponse(
                 user.getId(),
-                user.getUsername(),
+                user.getAccount().getUsername(),
                 user.getEmail(),
                 user.getRoles().stream().map(role -> role.getName().name()).toList()
         );

@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
  * Date: 23/08/24 @ 23:41
  */
 public interface IBearerTokenService {
+
     String generateToken(String username);
 
     String getBearerTokenFrom(HttpServletRequest request);

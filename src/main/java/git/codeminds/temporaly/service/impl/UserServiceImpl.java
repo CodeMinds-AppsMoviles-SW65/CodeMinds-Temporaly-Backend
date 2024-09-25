@@ -1,12 +1,10 @@
 package git.codeminds.temporaly.service.impl;
 
 import git.codeminds.temporaly.dto.auth.SignUpRequest;
-import git.codeminds.temporaly.entity.Role;
-import git.codeminds.temporaly.entity.Roles;
-import git.codeminds.temporaly.entity.User;
-import git.codeminds.temporaly.entity.UserInfo;
+import git.codeminds.temporaly.entity.*;
 import git.codeminds.temporaly.repository.RoleRepository;
 import git.codeminds.temporaly.repository.UserRepository;
+import git.codeminds.temporaly.service.AccountService;
 import git.codeminds.temporaly.service.UserService;
 import git.codeminds.temporaly.utils.security.service.IBearerTokenService;
 import git.codeminds.temporaly.utils.security.service.IHashingService;
@@ -14,10 +12,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Alex Avila Asto - A.K.A (Ryzeon)
@@ -32,6 +27,8 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final IHashingService hashingService;
     private final IBearerTokenService tokenService;
+
+    private final AccountService accountService;
 
     @Override
     public Optional<User> signUp(SignUpRequest request) {
@@ -48,19 +45,23 @@ public class UserServiceImpl implements UserService {
             roles.add(roleRepository.findByName(Role.getDefaultRole().getName()).orElseThrow(() -> new RuntimeException("Role not found")));
         }
 
-        var userInfo = new UserInfo();
-        userInfo.setNames(List.of(request.names().split(" ")));
-        userInfo.setLastNames(List.of(request.lastNames().split(" ")));
+        var accountInfo = new AccountInfo();
+        accountInfo.setNames(List.of(request.names().split(" ")));
+        accountInfo.setLastNames(List.of(request.lastNames().split(" ")));
 
+        Optional<Account> account = accountService.createAccount(accountInfo);
+        if (account.isEmpty()) {
+            throw new RuntimeException("Account not created");
+        }
         var user = new User(
                 request.email(),
                 hashingService.encode(request.password()),
                 Set.copyOf(roles),
-                userInfo
+                account.get()
         );
 
         userRepository.save(user);
-        return userRepository.findByUsername(user.getUsername());
+        return userRepository.findByEmail(user.getEmail());
     }
 
     @Override
@@ -68,33 +69,53 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id);
     }
 
+    /**
+     * Deleted user by id
+     * Find user in id, delete account also
+     * @param id {@link String}
+     */
+    @Override
+    public void deleteById(String id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+        Account account = user.get().getAccount();
+        if (account == null) {
+            throw new RuntimeException("Account not found");
+        }
+        userRepository.deleteById(id);
+        accountService.deleteAccount(account.getId());
+    }
+
+    /**
+     * Generate JWT from User Account.
+     * Its obligatory that user has an account.
+     * @param usernameOrEmail as {@link String}
+     * @param password as {@link String}
+     * @return {@link Optional} of {@link ImmutablePair} of {@link User} and {@link String}
+     */
     @Override
     public Optional<ImmutablePair<User, String>> signIn(String usernameOrEmail, String password) {
-        var user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+        var user = userRepository.findByEmailOrAccountUsername(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (!hashingService.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
-        var token = tokenService.generateToken(user.getUsername());
+        if (!Objects.nonNull(user.getAccount())) {
+            throw new RuntimeException("Cannot create JWT, cuz account is null, try to create a new account");
+        }
+        var token = tokenService.generateToken(user.getAccount().getUsername());
         return Optional.of(new ImmutablePair<>(user, token));
     }
 
     @Override
     public Optional<ImmutablePair<User, String>> refreshToken(String refreshToken) {
         var username = tokenService.getUsernameFromToken(refreshToken);
-        var user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
-        var token = tokenService.generateToken(user.getUsername());
+        var user = userRepository.findByAccountUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+        assert user.getAccount() != null;
+        // Verify if user has an account
+        var token = tokenService.generateToken(user.getAccount().getUsername());
         return Optional.of(new ImmutablePair<>(user, token));
     }
-
-//    @Override
-//    public Optional<User> updateDetails(String id, UpdateUserDetailsRequest request) {
-//        var user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-//        if (userRepository.existsByUsername(request.username())) {
-//            throw new RuntimeException("Cannot details, username already exists");
-//        }
-//        user.updateUserInfo(request);
-//        userRepository.save(user);
-//        return Optional.of(user);
-//    }
 }
