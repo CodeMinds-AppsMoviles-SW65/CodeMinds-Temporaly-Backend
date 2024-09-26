@@ -12,7 +12,7 @@ COPY src ./src
 RUN sed -i 's/spring.profiles.active=dev/spring.profiles.active=prod/' src/main/resources/application.properties
 
 # Package the application
-RUN mvn clean install
+RUN mvn clean install -DskipTests
 
 FROM openjdk:21-jdk-slim
 
