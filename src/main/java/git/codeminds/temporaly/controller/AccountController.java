@@ -28,7 +28,6 @@ public class AccountController {
 
     private final AccountService accountService;
 
-
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",

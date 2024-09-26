@@ -42,6 +42,6 @@ public class UserDetailsBuilder implements UserDetails {
     public static UserDetailsBuilder build(User user) {
         var authorities = user.getRoles().stream().map(role -> role.getName().name())
                 .map(SimpleGrantedAuthority::new).toList();
-        return new UserDetailsBuilder(user.getUsername(), user.getPassword(), authorities);
+        return new UserDetailsBuilder(user.getAccount().getUsername(), user.getPassword(), authorities);
     }
 }
