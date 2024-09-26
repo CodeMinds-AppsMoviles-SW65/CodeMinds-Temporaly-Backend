@@ -46,6 +46,17 @@ public class AccountController {
         return account.map(value -> ResponseEntity.ok(AccountResponse.fromAccount(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Account updated successfully",
+                    content = @io.swagger.v3.oas.annotations.media.Content(schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = AccountResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Account not found"
+            )
+    })
     @PutMapping("/update/{username}")
     public ResponseEntity<AccountResponse> updateAccount(@PathVariable String username, @RequestBody UpdateAccountRequest request) {
         Optional<Account> account = accountService.findByUsername(username);
@@ -57,6 +68,12 @@ public class AccountController {
         return ResponseEntity.notFound().build();
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Account activated successfully"
+            )
+    })
     @PostMapping("/activate/{username}/{code}")
     public ResponseEntity<String> activateAccount(@PathVariable String username, @PathVariable String code) {
         // code logic
