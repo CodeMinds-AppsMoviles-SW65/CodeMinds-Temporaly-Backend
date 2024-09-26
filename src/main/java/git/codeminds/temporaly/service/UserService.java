@@ -19,6 +19,8 @@ public interface UserService {
 
     void deleteById(String id);
 
+    void changePassword(String id, String newPassword);
+
     Optional<ImmutablePair<User, String>> signIn(String usernameOrEmail, String password);
 
     Optional<ImmutablePair<User, String>> refreshToken(String refreshToken);

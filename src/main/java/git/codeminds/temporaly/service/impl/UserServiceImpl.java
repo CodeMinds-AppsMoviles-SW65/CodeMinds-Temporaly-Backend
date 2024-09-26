@@ -88,6 +88,16 @@ public class UserServiceImpl implements UserService {
         accountService.deleteAccount(account.getId());
     }
 
+    @Override
+    public void changePassword(String accountEmail, String newPassword) {
+        Optional<User> user = userRepository.findByEmail(accountEmail);
+        if (user.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+        user.get().setPassword(hashingService.encode(newPassword));
+        userRepository.save(user.get());
+    }
+
     /**
      * Generate JWT from User Account.
      * Its obligatory that user has an account.
