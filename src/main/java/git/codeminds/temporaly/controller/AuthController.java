@@ -1,9 +1,6 @@
 package git.codeminds.temporaly.controller;
 
-import git.codeminds.temporaly.dto.auth.SignInRequest;
-import git.codeminds.temporaly.dto.auth.SignInResponse;
-import git.codeminds.temporaly.dto.auth.SignUpRequest;
-import git.codeminds.temporaly.dto.auth.SignUpResponse;
+import git.codeminds.temporaly.dto.auth.*;
 import git.codeminds.temporaly.entity.MessageResponse;
 import git.codeminds.temporaly.service.UserService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @CrossOrigin("*")
 @RestController
-@RequestMapping(value = "/api/v1/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/authentication", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Authentication", description = "Authentication Endpoints")
 @AllArgsConstructor
 public class AuthController {
@@ -74,5 +71,11 @@ public class AuthController {
         var details = userService.refreshToken(refreshToken).orElseThrow(() -> new RuntimeException("An error occurred while refreshing token"));
         var signInResponse = SignInResponse.fromDetails(details);
         return new ResponseEntity<>(signInResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<MessageResponse> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+        userService.changePassword(changePasswordRequest.accountMail(), changePasswordRequest.newPassword());
+        return new ResponseEntity<>(new MessageResponse("Password changed successfully"), HttpStatus.OK);
     }
 }

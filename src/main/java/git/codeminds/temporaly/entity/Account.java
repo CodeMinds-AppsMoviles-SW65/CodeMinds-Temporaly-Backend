@@ -39,7 +39,7 @@ public class Account {
     public Account(AccountInfo info) {
         this.active = false;
         this.info = info;
-        this.username = UserUtils.generateRandomUserName(info.getNames(), info.getLastNames());
+        this.username =  "";
     }
 
     public String getFullName() {

@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public interface AccountService {
 
-    Optional<Account> createAccount(AccountInfo accountInfo);
+    Optional<Account> createAccount(AccountInfo accountInfo, String username);
 
     void deleteAccount(String id);
 

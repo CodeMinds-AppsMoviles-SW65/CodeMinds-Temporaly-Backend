@@ -2,6 +2,7 @@ package git.codeminds.temporaly.entity;
 
 import git.codeminds.temporaly.utils.UserUtils;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,7 +24,11 @@ public class User {
 
     private String email;
 
+    @Setter
     private String password;
+
+    @Setter
+    private String username;
 
     @DBRef
     private Set<Role> roles;
@@ -39,5 +44,6 @@ public class User {
         this.password = password;
         this.roles = roles;
         this.account = account;
+        this.username = account.getUsername();
     }
 }
