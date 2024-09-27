@@ -1,6 +1,5 @@
 package git.codeminds.temporaly.dto.auth;
 
-import java.util.List;
 
 /**
  * Created by Alex Avila Asto - A.K.A (Ryzeon)
@@ -8,10 +7,8 @@ import java.util.List;
  * Date: 9/11/24 @ 19:46
  */
 public record SignUpRequest(
-        String names,
-        String lastNames,
+        String username,
         String email,
-        String password,
-        List<String> roles
+        String password
 ) {
 }

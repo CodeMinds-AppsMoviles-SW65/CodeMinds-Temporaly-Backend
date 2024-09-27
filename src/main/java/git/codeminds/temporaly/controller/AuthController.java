@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @CrossOrigin("*")
 @RestController
-@RequestMapping(value = "/api/v1/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/authentication", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Authentication", description = "Authentication Endpoints")
 @AllArgsConstructor
 public class AuthController {

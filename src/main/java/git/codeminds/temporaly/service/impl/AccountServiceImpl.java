@@ -22,8 +22,9 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
 
     @Override
-    public Optional<Account> createAccount(AccountInfo accountInfo) {
+    public Optional<Account> createAccount(AccountInfo accountInfo, String username) {
         Account account = new Account(accountInfo);
+        account.setUsername(username);
         accountRepository.save(account);
         return findByUsername(account.getUsername());
     }

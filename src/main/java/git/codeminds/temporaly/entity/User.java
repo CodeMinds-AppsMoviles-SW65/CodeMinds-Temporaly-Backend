@@ -27,6 +27,9 @@ public class User {
     @Setter
     private String password;
 
+    @Setter
+    private String username;
+
     @DBRef
     private Set<Role> roles;
 
@@ -41,5 +44,6 @@ public class User {
         this.password = password;
         this.roles = roles;
         this.account = account;
+        this.username = account.getUsername();
     }
 }
