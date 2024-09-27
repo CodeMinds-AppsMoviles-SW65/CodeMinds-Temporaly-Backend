@@ -3,14 +3,13 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-#    image: ryzeon/temporally:latest
+    #    image: ryzeon/temporally:latest
     #    mem_limit: 512m
     ports:
       - "7645:7645"
     environment:
-      - JWT_SECRET=example
-      - GOOGLE_CLIENT_ID=example
-      - GOOGLE_CLIENT_SECRET=example
+      - GOOGLE_CLIENT_ID=Key
+      - GOOGLE_CLIENT_SECRET=Key
     restart: always
     depends_on:
       temporally_mongodb:
@@ -18,12 +17,12 @@ services:
 
   temporally_mongodb:
     image: 'mongo:latest'
-    ports:
-      - '27017:27017'
     environment:
       - MONGO_INITDB_DATABASE=temporally
       - MONGO_INITDB_ROOT_PASSWORD=example
       - MONGO_INITDB_ROOT_USERNAME=root
+    volumes:
+      - mongodb_data:/data/db
     restart: always
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/temporally --quiet
