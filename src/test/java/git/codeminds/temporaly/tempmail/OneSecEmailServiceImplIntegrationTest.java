@@ -1,5 +1,6 @@
 package git.codeminds.temporaly.tempmail;
 
+import git.codeminds.temporaly.dto.email.EmailMessageResponse;
 import git.codeminds.temporaly.entity.TempMail;
 import git.codeminds.temporaly.pojo.EmailMessage;
 import git.codeminds.temporaly.service.OneSecEmailService;
@@ -60,5 +61,13 @@ class OneSecEmailServiceImplIntegrationTest {
             System.out.println(email);
             System.out.println(oneSecEmailService.getEmailContent(tempMail, email));
         }
+    }
+
+    @Test
+    void getAllMessages() {
+        TempMail tempMail = new TempMail("monjmcoeejh", "1secmail.net");
+        List<EmailMessageResponse> allMessages = oneSecEmailService.getAllMessages(tempMail);
+        assertNotNull(allMessages);
+        allMessages.forEach(System.out::println);
     }
 }
