@@ -1,5 +1,6 @@
 package git.codeminds.temporaly.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 /**
@@ -22,6 +23,7 @@ public class TempMail {
     public TempMail() {
     }
 
+    @JsonIgnore
     public String getEmail() {
         return username + "@" + domain;
     }
