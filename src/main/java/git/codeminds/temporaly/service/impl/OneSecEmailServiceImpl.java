@@ -1,5 +1,7 @@
 package git.codeminds.temporaly.service.impl;
 
+import git.codeminds.temporaly.dto.email.EmailMessageAttachmentResponse;
+import git.codeminds.temporaly.dto.email.EmailMessageResponse;
 import git.codeminds.temporaly.entity.TempMail;
 import git.codeminds.temporaly.pojo.EmailMessage;
 import git.codeminds.temporaly.pojo.EmailMessageContent;
@@ -71,5 +73,32 @@ public class OneSecEmailServiceImpl implements OneSecEmailService {
         EmailMessageContent exchange = restTemplate.exchange(URL + "?action=readMessage&login=" + tempMail.getUsername() + "&domain=" + tempMail.getDomain() + "&id=" + emailMessage.getId(), HttpMethod.GET, entity, EmailMessageContent.class).getBody();
         assert exchange != null;
         return exchange;
+    }
+
+    @Override
+    public List<EmailMessageResponse> getAllMessages(TempMail tempMail) {
+        List<EmailMessage> emails = getEmails(tempMail);
+        List<EmailMessageResponse> emailMessageResponses = new ArrayList<>();
+        for (EmailMessage email : emails) {
+            EmailMessageContent emailContent = getEmailContent(tempMail, email);
+            emailMessageResponses.add(new EmailMessageResponse(
+                    email.getId(),
+                    email.getFrom(),
+                    tempMail.getEmail(),
+                    email.getSubject(),
+                    email.getDate(),
+                    emailContent.getAttachments().stream().map(
+                            attachment -> new EmailMessageAttachmentResponse(
+                                    attachment.getFilename(),
+                                    attachment.getContentType(),
+                                    attachment.getSize(),
+                                    emailContent.getAttachmentDownloadUrl(tempMail, attachment)
+                            )
+                    ).toList(),
+                    emailContent.getBody(),
+                    emailContent.getTextBody(),
+                    emailContent.getHtmlBody()));
+        }
+        return emailMessageResponses;
     }
 }
