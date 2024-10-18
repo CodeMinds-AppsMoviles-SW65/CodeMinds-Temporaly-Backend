@@ -1,5 +1,6 @@
 package git.codeminds.temporaly.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,12 +24,12 @@ import java.security.Principal;
 @RequestMapping(name = "/api/v1/authentication/oauth", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "OAuth", description = "OAuth Endpoints")
 @AllArgsConstructor
+@Hidden
 public class OauthController {
 
 
     // Endpoint de éxito de autenticación
     @GetMapping("/success")
-    @ResponseBody
     public String oauthLoginSuccess(@AuthenticationPrincipal OAuth2User principal) {
         // Puedes acceder a la información del usuario autenticado desde el objeto `principal`
         String email = principal.getAttribute("email");
@@ -40,7 +41,6 @@ public class OauthController {
 
     // Endpoint de fallo de autenticación
     @GetMapping("/failure")
-    @ResponseBody
     public String oauthLoginFailure() {
         return "Error en la autenticación con OAuth2.";
     }
@@ -56,7 +56,6 @@ public class OauthController {
 
     // Opcional: Endpoint para obtener información del usuario autenticado
     @GetMapping("/user")
-    @ResponseBody
     public Principal user(Principal principal) {
         return principal;  // Devuelve los detalles del usuario autenticado
     }
