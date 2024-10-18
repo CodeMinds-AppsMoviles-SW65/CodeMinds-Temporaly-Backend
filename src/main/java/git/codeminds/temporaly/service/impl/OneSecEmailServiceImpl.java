@@ -2,9 +2,11 @@ package git.codeminds.temporaly.service.impl;
 
 import git.codeminds.temporaly.dto.email.EmailMessageAttachmentResponse;
 import git.codeminds.temporaly.dto.email.EmailMessageResponse;
+import git.codeminds.temporaly.dto.email.OnceSecMail;
 import git.codeminds.temporaly.entity.TempMail;
 import git.codeminds.temporaly.pojo.EmailMessage;
 import git.codeminds.temporaly.pojo.EmailMessageContent;
+import git.codeminds.temporaly.repository.TempMailRepository;
 import git.codeminds.temporaly.service.OneSecEmailService;
 import git.codeminds.temporaly.utils.EmailUtils;
 import org.springframework.http.HttpEntity;
@@ -33,8 +35,11 @@ public class OneSecEmailServiceImpl implements OneSecEmailService {
 
     private final List<String> domains;
 
-    public OneSecEmailServiceImpl(RestTemplate restTemplate) {
+    private final TempMailRepository tempMailRepository;
+
+    public OneSecEmailServiceImpl(RestTemplate restTemplate, TempMailRepository tempMailRepository) {
         this.restTemplate = restTemplate;
+        this.tempMailRepository = tempMailRepository;
         this.domains = new ArrayList<>();
 
         this.headers = new HttpHeaders();
@@ -53,10 +58,13 @@ public class OneSecEmailServiceImpl implements OneSecEmailService {
     }
 
     @Override
-    public TempMail createTempMail() {
+    public OnceSecMail createTempMail() {
         String domain = getDomains().get(ThreadLocalRandom.current().nextInt(getDomains().size()));
         String username = EmailUtils.generateRandomEmailUsername();
-        return new TempMail(username, domain);
+        if (tempMailRepository.existsByUsernameAndDomain(username, domain)) {
+            return createTempMail();
+        }
+        return new OnceSecMail(username, domain);
     }
 
     @Override

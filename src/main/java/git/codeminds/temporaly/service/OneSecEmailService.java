@@ -1,6 +1,7 @@
 package git.codeminds.temporaly.service;
 
 import git.codeminds.temporaly.dto.email.EmailMessageResponse;
+import git.codeminds.temporaly.dto.email.OnceSecMail;
 import git.codeminds.temporaly.entity.TempMail;
 import git.codeminds.temporaly.pojo.EmailMessage;
 import git.codeminds.temporaly.pojo.EmailMessageContent;
@@ -16,7 +17,7 @@ public interface OneSecEmailService {
 
     List<String> getDomains();
 
-    TempMail createTempMail();
+    OnceSecMail createTempMail();
 
     List<EmailMessage> getEmails(TempMail tempMail);
 

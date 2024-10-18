@@ -5,10 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Unwrapped;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Alex Avila Asto - A.K.A (Ryzeon)
@@ -33,6 +35,9 @@ public class Account {
     @CreatedDate
     private Date createdDate;
 
+    @DBRef
+    List<TempMail> mailList;
+
     public Account() {
     }
 
@@ -40,6 +45,7 @@ public class Account {
         this.active = false;
         this.info = info;
         this.username =  "";
+        this.mailList = List.of();
     }
 
     public String getFullName() {
