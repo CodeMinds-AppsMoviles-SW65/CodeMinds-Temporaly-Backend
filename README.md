@@ -2,6 +2,13 @@
 
 Este proyecto utiliza Spring Boot para proporcionar autenticación basada en OAuth2 con Google, GitHub y Facebook. A continuación, se detallan los pasos para configurar y usar la autenticación OAuth2 en tu aplicación.
 
+## Todo
+
+- [ ] Simplify account
+- [ ] Added email history into account
+- [ ] Check for a tempmail creation, cannot request if we did not create it
+- [ ] Add a way to check if the email is valid
+
 ## Requisitos
 
 - **Java 17** o superior.

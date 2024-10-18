@@ -1,0 +1,31 @@
+package git.codeminds.temporaly.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+
+/**
+ * Created by Alex Avila Asto - A.K.A (Ryzeon)
+ * Project: temporally-backend
+ * Date: 11/10/24 @ 02:09
+ */
+@Data
+public class TempMail {
+
+    private String username;
+
+    private String domain;
+
+    public TempMail(String username, String domain) {
+        this.username = username;
+        this.domain = domain;
+    }
+
+    public TempMail() {
+    }
+
+    @JsonIgnore
+    public String getEmail() {
+        return username + "@" + domain;
+    }
+
+}
