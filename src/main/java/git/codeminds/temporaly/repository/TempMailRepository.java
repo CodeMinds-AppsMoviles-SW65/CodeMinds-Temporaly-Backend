@@ -11,4 +11,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface TempMailRepository extends MongoRepository<TempMail, String> {
 
     boolean existsByUsernameAndDomain(String username, String domain);
+
+    TempMail findByUsernameAndDomain(String username, String domain);
 }
