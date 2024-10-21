@@ -1,0 +1,15 @@
+{
+  "secureDomains": [
+    "gmail.com",
+    "yahoo.com",
+    "hotmail.com",
+    "aol.com",
+    "hotmail.*",
+    "msn.com",
+    "*.edu.*",
+    "*.edu",
+    "apple.com",
+    "outlook.com",
+    "ryzeon.me"
+  ]
+}
