@@ -5,6 +5,7 @@ import git.codeminds.temporaly.entity.*;
 import git.codeminds.temporaly.repository.RoleRepository;
 import git.codeminds.temporaly.repository.UserRepository;
 import git.codeminds.temporaly.service.AccountService;
+import git.codeminds.temporaly.service.DomainService;
 import git.codeminds.temporaly.service.UserService;
 import git.codeminds.temporaly.utils.security.service.IBearerTokenService;
 import git.codeminds.temporaly.utils.security.service.IHashingService;
@@ -30,13 +31,22 @@ public class UserServiceImpl implements UserService {
 
     private final AccountService accountService;
 
+    private final DomainService domainService;
+
     @Override
     public Optional<User> signUp(SignUpRequest request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new RuntimeException("Email already exists");
         }
 
-        var roles =  new HashSet<Role>();
+        /*
+         * Check if email is safe, if not throw an exception
+         */
+        if (!domainService.isSafeEmail(request.email())) {
+            throw new RuntimeException("Email is not safe");
+        }
+
+        var roles = new HashSet<Role>();
 
         roles.add(roleRepository.findByName(Role.getDefaultRole().getName()).orElseThrow(() -> new RuntimeException("Role not found")));
 
@@ -65,6 +75,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Deleted user by id
      * Find user in id, delete account also
+     *
      * @param id {@link String}
      */
     @Override
@@ -94,8 +105,9 @@ public class UserServiceImpl implements UserService {
     /**
      * Generate JWT from User Account.
      * Its obligatory that user has an account.
+     *
      * @param usernameOrEmail as {@link String}
-     * @param password as {@link String}
+     * @param password        as {@link String}
      * @return {@link Optional} of {@link ImmutablePair} of {@link User} and {@link String}
      */
     @Override

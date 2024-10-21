@@ -3,10 +3,13 @@ package git.codeminds.temporaly.service.impl;
 import git.codeminds.temporaly.dto.email.EmailMessageAttachmentResponse;
 import git.codeminds.temporaly.dto.email.EmailMessageResponse;
 import git.codeminds.temporaly.dto.email.OnceSecMail;
+import git.codeminds.temporaly.dto.email.OnceSecMailInfo;
+import git.codeminds.temporaly.entity.Account;
 import git.codeminds.temporaly.entity.TempMail;
 import git.codeminds.temporaly.pojo.EmailMessage;
 import git.codeminds.temporaly.pojo.EmailMessageContent;
 import git.codeminds.temporaly.repository.TempMailRepository;
+import git.codeminds.temporaly.service.AccountService;
 import git.codeminds.temporaly.service.OneSecEmailService;
 import git.codeminds.temporaly.utils.EmailUtils;
 import org.springframework.http.HttpEntity;
@@ -17,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -37,9 +41,12 @@ public class OneSecEmailServiceImpl implements OneSecEmailService {
 
     private final TempMailRepository tempMailRepository;
 
-    public OneSecEmailServiceImpl(RestTemplate restTemplate, TempMailRepository tempMailRepository) {
+    private final AccountService accountService;
+
+    public OneSecEmailServiceImpl(RestTemplate restTemplate, TempMailRepository tempMailRepository, AccountService accountService) {
         this.restTemplate = restTemplate;
         this.tempMailRepository = tempMailRepository;
+        this.accountService = accountService;
         this.domains = new ArrayList<>();
 
         this.headers = new HttpHeaders();
@@ -54,17 +61,21 @@ public class OneSecEmailServiceImpl implements OneSecEmailService {
         HttpEntity<String[]> entity = new HttpEntity<>(headers);
         String[] exchange = restTemplate.exchange(URL + "?action=getDomainList", HttpMethod.GET, entity, String[].class).getBody();
         assert exchange != null;
-        return  List.of(exchange);
+        return List.of(exchange);
     }
 
     @Override
-    public OnceSecMail createTempMail() {
+    public Optional<OnceSecMail> createTempMail(String user) {
         String domain = getDomains().get(ThreadLocalRandom.current().nextInt(getDomains().size()));
         String username = EmailUtils.generateRandomEmailUsername();
         if (tempMailRepository.existsByUsernameAndDomain(username, domain)) {
-            return createTempMail();
+            return createTempMail(user);
         }
-        return new OnceSecMail(username, domain);
+        Account account = accountService.findByUsername(user).orElseThrow(() -> new IllegalArgumentException("Invalid user"));
+        TempMail tempMail = new TempMail(username, domain, account.getSubscription());
+        account.addTempMail(tempMailRepository.save(tempMail));
+        accountService.save(account);
+        return Optional.of(new OnceSecMail(username, domain));
     }
 
     @Override
@@ -108,5 +119,15 @@ public class OneSecEmailServiceImpl implements OneSecEmailService {
                     emailContent.getHtmlBody()));
         }
         return emailMessageResponses;
+    }
+
+    @Override
+    public List<OnceSecMailInfo> getEmailHistory(String username) {
+        Account account = accountService.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Invalid user"));
+        List<OnceSecMailInfo> emailHistory = new ArrayList<>();
+        account.getMailList().stream().limit(account.getSubscription().getMaxHistory()).forEach(
+                tempMail -> emailHistory.add(new OnceSecMailInfo(tempMail.getUsername(), tempMail.getDomain(), tempMail.getExpirationDate(), tempMail.isCanRecover()))
+        );
+        return emailHistory;
     }
 }

@@ -38,14 +38,20 @@ public class Account {
     @DBRef
     List<TempMail> mailList;
 
+    private Subscription subscription;
+
     public Account() {
     }
 
     public Account(AccountInfo info) {
         this.active = false;
         this.info = info;
-        this.username =  "";
+        this.username = "";
         this.mailList = List.of();
+    }
+
+    public void addTempMail(TempMail tempMail) {
+        this.mailList.add(tempMail);
     }
 
     public String getFullName() {

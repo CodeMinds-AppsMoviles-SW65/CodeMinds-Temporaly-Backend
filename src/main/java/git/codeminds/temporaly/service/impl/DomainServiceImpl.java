@@ -1,8 +1,8 @@
 package git.codeminds.temporaly.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import git.codeminds.temporaly.pojo.AllowedDomainList;
 import git.codeminds.temporaly.service.DomainService;
-import lombok.Data;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class DomainServiceImpl implements DomainService {
 
     private List<String> allowedDomains;
 
-    public DomainServiceImpl() throws Exception {
+    public DomainServiceImpl() throws IOException {
         loadAllowedDomains();
     }
 
@@ -41,10 +41,4 @@ public class DomainServiceImpl implements DomainService {
         }
         return false;
     }
-}
-
-@Data
-class AllowedDomainList {
-
-    private List<String> secureDomains;
 }
