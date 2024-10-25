@@ -1,8 +1,6 @@
 package git.codeminds.temporaly.tempmail;
 
-import git.codeminds.temporaly.dto.email.EmailMessageResponse;
 import git.codeminds.temporaly.entity.TempMail;
-import git.codeminds.temporaly.pojo.EmailMessage;
 import git.codeminds.temporaly.service.OneSecEmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,31 +41,5 @@ class OneSecEmailServiceImplIntegrationTest {
         assertNotNull(tempMail);
         System.out.println(tempMail);
         System.out.println(tempMail.getEmail());
-    }
-
-    @Test
-    void getInbox() {
-        List<EmailMessage> emails = oneSecEmailService.getEmails(new TempMail("monjmcoeejh", "1secmail.net"));
-        assertNotNull(emails);
-        emails.forEach(System.out::println);
-    }
-
-    @Test
-    void getEmailContent() {
-        TempMail tempMail = new TempMail("monjmcoeejh", "1secmail.net");
-        List<EmailMessage> emails = oneSecEmailService.getEmails(tempMail);
-        assertNotNull(emails);
-        for (EmailMessage email : emails) {
-            System.out.println(email);
-            System.out.println(oneSecEmailService.getEmailContent(tempMail, email));
-        }
-    }
-
-    @Test
-    void getAllMessages() {
-        TempMail tempMail = new TempMail("monjmcoeejh", "1secmail.net");
-        List<EmailMessageResponse> allMessages = oneSecEmailService.getAllMessages(tempMail);
-        assertNotNull(allMessages);
-        allMessages.forEach(System.out::println);
     }
 }

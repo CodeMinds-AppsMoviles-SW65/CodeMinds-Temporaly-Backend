@@ -46,6 +46,10 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Email is not safe");
         }
 
+        if (userRepository.existsByUsername(request.username())) {
+            throw new RuntimeException("Username already exists");
+        }
+
         var roles = new HashSet<Role>();
 
         roles.add(roleRepository.findByName(Role.getDefaultRole().getName()).orElseThrow(() -> new RuntimeException("Role not found")));

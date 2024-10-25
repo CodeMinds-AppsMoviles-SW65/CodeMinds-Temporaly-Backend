@@ -48,6 +48,7 @@ public class Account {
         this.info = info;
         this.username = "";
         this.mailList = List.of();
+        this.subscription= Subscription.FREE;
     }
 
     public void addTempMail(TempMail tempMail) {
