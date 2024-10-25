@@ -33,13 +33,4 @@ class OneSecEmailServiceImplIntegrationTest {
         assertNotNull(domains);
         domains.forEach(System.out::println);
     }
-
-
-    @Test
-    void getRandomEmail() {
-        TempMail tempMail = oneSecEmailService.createTempMail();
-        assertNotNull(tempMail);
-        System.out.println(tempMail);
-        System.out.println(tempMail.getEmail());
-    }
 }
