@@ -19,6 +19,8 @@ public interface AccountService {
 
     void updateAccount(String id, UpdateAccountRequest request);
 
+    void save(Account account);
+
     Optional<Account> findByUsername(String username);
 
     Optional<Account> findById(String id);

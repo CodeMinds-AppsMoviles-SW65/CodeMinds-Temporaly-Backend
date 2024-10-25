@@ -23,6 +23,9 @@ public class EmailUtils {
             char c = (char) (RANDOM.nextInt(26) + 'a');
             stringBuilder.append(c);
         }
+        String word = "temporaly";
+        int index = RANDOM.nextInt(stringBuilder.length());
+        stringBuilder.insert(index, word.substring(0, 3));
         return stringBuilder.toString();
     }
 }
