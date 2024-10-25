@@ -1,12 +1,12 @@
 package git.codeminds.temporaly.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import git.codeminds.temporaly.pojo.AllowedDomainList;
+import git.codeminds.temporaly.configuration.properties.SecureDomainsProperties;
 import git.codeminds.temporaly.service.DomainService;
-import org.springframework.core.io.ClassPathResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -19,15 +19,14 @@ public class DomainServiceImpl implements DomainService {
 
     private List<String> allowedDomains;
 
-    public DomainServiceImpl() throws IOException {
-        loadAllowedDomains();
-    }
+    private final Logger logger = LoggerFactory.getLogger(DomainServiceImpl.class);
 
-    void loadAllowedDomains() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        ClassPathResource resource = new ClassPathResource("domains.json");
-        AllowedDomainList allowedDomainList = mapper.readValue(resource.getFile(), AllowedDomainList.class);
-        allowedDomains = allowedDomainList.getSecureDomains();
+    @Autowired
+    public DomainServiceImpl(SecureDomainsProperties secureDomainsProperties) {
+        this.allowedDomains = secureDomainsProperties.getDomains();
+        for (String domain : allowedDomains) {
+            logger.info("Allowed domain: {}", domain);
+        }
     }
 
     @Override
